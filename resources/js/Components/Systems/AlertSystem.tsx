@@ -5,7 +5,7 @@ import { FC, SyntheticEvent } from "react"
 const AlertSystem: FC = () => {
     const {ALERT, SET_ALERT} = useRootContext()
     const handleClose = (
-        event?: SyntheticEvent | Event,
+        event?: Event | SyntheticEvent<any, Event> | null,
         reason?: SnackbarCloseReason,
     ) => {
         if (reason === 'clickaway') {

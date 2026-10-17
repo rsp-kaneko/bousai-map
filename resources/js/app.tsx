@@ -6,7 +6,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme';
 import { StrictMode } from 'react';
@@ -27,10 +27,12 @@ createInertiaApp({
         root.render(
             <StrictMode>
                 <RootProvider>
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline />
-                        <App {...props} />
-                    </ThemeProvider>
+                    <StyledEngineProvider injectFirst>
+                        <ThemeProvider theme={theme}>
+                            <CssBaseline />
+                            <App {...props} />
+                        </ThemeProvider>
+                    </StyledEngineProvider>
                 </RootProvider>
             </StrictMode>
         );
