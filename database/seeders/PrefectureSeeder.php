@@ -1,0 +1,82 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\Prefecture;
+
+class PrefectureSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $prefectures = [
+            // 北海道
+            ['region' => '北海道', 'name' => '北海道'],
+
+            // 東北
+            ['region' => '東北', 'name' => '青森県'],
+            ['region' => '東北', 'name' => '岩手県'],
+            ['region' => '東北', 'name' => '宮城県'],
+            ['region' => '東北', 'name' => '秋田県'],
+            ['region' => '東北', 'name' => '山形県'],
+            ['region' => '東北', 'name' => '福島県'],
+
+            // 関東
+            ['region' => '関東', 'name' => '茨城県'],
+            ['region' => '関東', 'name' => '栃木県'],
+            ['region' => '関東', 'name' => '群馬県'],
+            ['region' => '関東', 'name' => '埼玉県'],
+            ['region' => '関東', 'name' => '千葉県'],
+            ['region' => '関東', 'name' => '東京都'],
+            ['region' => '関東', 'name' => '神奈川県'],
+
+            // 中部
+            ['region' => '中部', 'name' => '新潟県'],
+            ['region' => '中部', 'name' => '富山県'],
+            ['region' => '中部', 'name' => '石川県'],
+            ['region' => '中部', 'name' => '福井県'],
+            ['region' => '中部', 'name' => '山梨県'],
+            ['region' => '中部', 'name' => '長野県'],
+            ['region' => '中部', 'name' => '岐阜県'],
+            ['region' => '中部', 'name' => '静岡県'],
+            ['region' => '中部', 'name' => '愛知県'],
+
+            // 近畿
+            ['region' => '近畿', 'name' => '三重県'],
+            ['region' => '近畿', 'name' => '滋賀県'],
+            ['region' => '近畿', 'name' => '京都府'],
+            ['region' => '近畿', 'name' => '大阪府'],
+            ['region' => '近畿', 'name' => '兵庫県'],
+            ['region' => '近畿', 'name' => '奈良県'],
+            ['region' => '近畿', 'name' => '和歌山県'],
+
+            // 中国
+            ['region' => '中国', 'name' => '鳥取県'],
+            ['region' => '中国', 'name' => '島根県'],
+            ['region' => '中国', 'name' => '岡山県'],
+            ['region' => '中国', 'name' => '広島県'],
+            ['region' => '中国', 'name' => '山口県'],
+
+            // 四国
+            ['region' => '四国', 'name' => '徳島県'],
+            ['region' => '四国', 'name' => '香川県'],
+            ['region' => '四国', 'name' => '愛媛県'],
+            ['region' => '四国', 'name' => '高知県'],
+
+            // 九州・沖縄
+            ['region' => '九州', 'name' => '福岡県'],
+            ['region' => '九州', 'name' => '佐賀県'],
+            ['region' => '九州', 'name' => '長崎県'],
+            ['region' => '九州', 'name' => '熊本県'],
+            ['region' => '九州', 'name' => '大分県'],
+            ['region' => '九州', 'name' => '宮崎県'],
+            ['region' => '九州', 'name' => '鹿児島県'],
+            ['region' => '九州', 'name' => '沖縄県'],
+        ];
+
+        foreach ($prefectures as $prefecture) Prefecture::create($prefecture);
+    }
+}
