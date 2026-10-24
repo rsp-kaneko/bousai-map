@@ -8,6 +8,7 @@ import { AccessTime, Apartment, Equalizer, Place, Warning } from "@mui/icons-mat
 import OutlinedCard from "./Cards/OutlinedCard"
 import CustomAlert from "./Alerts/CustomAlert"
 import SheltersMapDialog from "./SheltersMapDialog"
+import HypocenterMobileContent from "./HypocenterMobileContent"
 
 type Props = {
     selectedHistory: JmaQuake | null
@@ -50,8 +51,16 @@ const BousaiStatusContent: FC<Props> = ({
     return (
         <Grid container spacing={2}>
 
+            {/* 震源地ステータス（Mobile） */}
+            <Grid size={{xs: 12, md: 0}} sx={{display: {xs: "block", md: "none"}}}>
+                <HypocenterMobileContent
+                    selectedHistory={selectedHistory}
+                    maxScale={maxScale}
+                />
+            </Grid>
+
             {/* 震度＆津波情報 */}
-            <Grid size={{xs: 12, xl: 6}}>
+            <Grid size={{xs: 12, xl: 6}} sx={{display: {xs: "none", md: "block"}}}>
                 <OutlinedCard height="100%" bgcolor={scaleColor} textColor="#fff">
                     <CardContent>
                         <Typography

@@ -20,7 +20,7 @@ const RootHeader: FC = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                height: 64,
+                height: 80,
                 width: '100%',
                 backgroundColor: '#2e2e2e',
                 px: {xs: 3, md: 5}

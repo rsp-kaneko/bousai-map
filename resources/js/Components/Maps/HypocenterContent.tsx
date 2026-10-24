@@ -22,7 +22,8 @@ const HypocenterContent: FC<Props> = ({hypocenter, maxScale}) => {
             top: {xs: 0, md: 10},
             right: {xs: 0, md: 10},
             backgroundColor: alpha(getScaleColor(maxScale), 0.7),
-            border: '2px solid #aaa'
+            border: '2px solid #aaa',
+            display: {xs: "none", md: "block"}
         }}>
             <Grid container spacing={{xs: 0, md: 2}}>
                 <Grid size={6}>

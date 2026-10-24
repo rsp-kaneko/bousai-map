@@ -31,6 +31,8 @@ const Top: FC = () => {
                     <Grid size={{xs: 12, md: 7}}>
                         <PrefecturesMap
                             selectedHistory={selectedHistory}
+                            setSelectedHistory={setSelectedHistory}
+                            p2pHistories={p2pHistories}
                             tsunamiHistories={tsunamiHistories}
                         />
                     </Grid>

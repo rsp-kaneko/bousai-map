@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo } from "react"
+import { Dispatch, FC, SetStateAction, useEffect, useMemo } from "react"
 import RootMapContainer from "./RootMapContainer"
 import usePrefecture from "@/Hooks/usePrefecture"
 import { GeoJSON } from "react-leaflet"
@@ -11,13 +11,21 @@ import EpicenterMarker from "./EpicenterMarker"
 import { LatLngExpression } from "leaflet"
 import HypocenterContent from "./HypocenterContent"
 import useCoastLine from "@/Hooks/useCoastLine"
+import MobileAreaButton from "./MobileAreaButton"
 
 type Props = {
     selectedHistory: JmaQuake | null
+    setSelectedHistory: Dispatch<SetStateAction<JmaQuake | null>>
+    p2pHistories: JmaQuake[]
     tsunamiHistories: JmaTsunami | null
 }
 
-const PrefecturesMap: FC<Props> = ({selectedHistory, tsunamiHistories}) => {
+const PrefecturesMap: FC<Props> = ({
+    selectedHistory,
+    setSelectedHistory,
+    p2pHistories,
+    tsunamiHistories
+}) => {
     const { isLoad, prefectures, getPrefecturePolygons } = usePrefecture()
     const { getCoastLines, coastLines } = useCoastLine()
     const {getScaleColor, getTsunamiGradeColor} = useBousai()
@@ -64,12 +72,21 @@ const PrefecturesMap: FC<Props> = ({selectedHistory, tsunamiHistories}) => {
                 <MapLoadingViewer />
             )}
 
+            {/* 地震情報（PC用） */}
             <HypocenterContent
                 hypocenter={hypocenter}
                 maxScale={maxScale!}
             />
 
-            <RootMapContainer zoom={7.5} height={{xs: 400, md: 700}} center={mapCenterPosition}>
+            {/* 詳細ボタン（スマホ用） */}
+            <MobileAreaButton
+                selectedHistory={selectedHistory}
+                setSelectedHistory={setSelectedHistory}
+                p2pHistories={p2pHistories}
+                tsunamiHistories={tsunamiHistories}
+            />
+
+            <RootMapContainer zoom={7} height={700} center={mapCenterPosition}>
 
                 {/* 震源地ポイントレイヤー */}
                 {hypocenter && hypocenter.latitude != null && hypocenter.longitude != null && (

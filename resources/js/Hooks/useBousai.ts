@@ -22,7 +22,7 @@ const useBousai = () => {
     // 震度に応じたバッジ色
     const getScaleColor = (scale: JmaScale): string => {
         switch (scale) {
-            case 10: return '#607d8b'
+            case 10: return '#4444ff'
             case 20: return '#0288d1'
             case 30: return '#00897b'
             case 40: return '#fbc02d'
