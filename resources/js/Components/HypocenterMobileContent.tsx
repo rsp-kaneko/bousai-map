@@ -3,7 +3,7 @@ import { JmaQuake, JmaScale } from "@/types/p2pquake"
 import { alpha, Box, CardContent, CardHeader, Divider, Grid, Typography } from "@mui/material"
 import { FC } from "react"
 import DarkCard from "./Cards/DarkCard"
-import { Equalizer } from "@mui/icons-material"
+import { Equalizer, Place } from "@mui/icons-material"
 
 type Props = {
     selectedHistory: JmaQuake | null
@@ -32,6 +32,7 @@ const HypocenterMobileContent: FC<Props> = ({
                         最大{formatScale(maxScale!)}
                     </Box>
                 }
+                subheader={"【震源地】"+hypocenter?.name}
             />
             <Divider sx={{borderColor: "#fff"}} />
             <CardContent>
