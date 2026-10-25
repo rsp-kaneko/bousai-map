@@ -1,14 +1,14 @@
 import { JmaObservationPoint, JmaQuake, JmaScale } from "@/types/p2pquake"
-import { alpha, Box, Button, CardContent, Grid, Stack, Typography } from "@mui/material"
+import { CardContent, Grid, Stack, Typography } from "@mui/material"
 import { FC, useEffect, useMemo, useState } from "react"
 import DarkCard from "./Cards/DarkCard"
 import CurrentClock from "./CurrentClock"
 import useBousai from "@/Hooks/useBousai"
-import { AccessTime, Apartment, Equalizer, Place, Warning } from "@mui/icons-material"
+import { AccessTime, Equalizer } from "@mui/icons-material"
 import OutlinedCard from "./Cards/OutlinedCard"
 import CustomAlert from "./Alerts/CustomAlert"
-import SheltersMapDialog from "./SheltersMapDialog"
 import HypocenterMobileContent from "./HypocenterMobileContent"
+import AreaStatusContent from "./AreaStatusContent"
 
 type Props = {
     selectedHistory: JmaQuake | null
@@ -19,11 +19,6 @@ const BousaiStatusContent: FC<Props> = ({
 }) => {
     const {formatScale, getScaleColor, formatTsunami, getTsunamiColor} = useBousai()
     const [selectedPref, setSelectedPref] = useState<{pref: string, scale: JmaScale} | null>(null)
-    const [sheltersDialogStatus, setSheltersDialogStatus] = useState({
-        open: false,
-        prefectureName: '',
-        localName: ''
-    })
     const actionDateTime: string | undefined = selectedHistory?.earthquake?.time
     const maxScale = selectedHistory?.earthquake?.maxScale
     const scaleColor = maxScale !== undefined ? getScaleColor(maxScale) : '#757575'
@@ -103,142 +98,15 @@ const BousaiStatusContent: FC<Props> = ({
                 </DarkCard>
             </Grid>
 
-            {/* 都道府県別 */}
-            <Grid size={12}>
-                <DarkCard>
-                    <CardContent>
-                        <Stack spacing={2}>
-                            <Typography component='h5' sx={{
-                                borderBottom: '1px solid #aaa',
-                                pb: 0.5,
-                                alignItems: 'center',
-                                display: 'flex'
-                            }}>
-                                <Place sx={{mr: 1}} />
-                                発生エリア
-                            </Typography>
-                            <Box sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                overflowX: 'auto',
-                                scrollbarWidth: 'thin',
-                                gap: 1
-                            }}>
-                                {pointPrefs.length === 0 && (
-                                    <Box sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 1
-                                    }}>
-                                        <Warning />
-                                        <Typography component="span">不明です</Typography>
-                                    </Box>
-                                )}
-                                {pointPrefs.length !== 0 && pointPrefs.map((data, index) => {
-                                    const color: string = getScaleColor(data.scale)
-                                    return (
-                                        <Button
-                                            key={index}
-                                            variant="outlined"
-                                            onClick={() => setSelectedPref(data)}
-                                            sx={data.pref === selectedPref?.pref ? {
-                                                borderColor: color,
-                                                backgroundColor: alpha(color, 0.6),
-                                                color: '#fff',
-                                                wordBreak: 'keep-all'
-                                            } : {
-                                                color: color,
-                                                borderColor: color,
-                                                wordBreak: 'keep-all',
-                                                '&:hover': {
-                                                    borderColor: color,
-                                                    backgroundColor: alpha(color, 0.6),
-                                                    color: '#fff'
-                                                },
-                                            }}
-                                        >
-                                            {data.pref}
-                                        </Button>
-                                    )
-                                })}
-                            </Box>
-                        </Stack>
-                    </CardContent>
-                </DarkCard>
+            <Grid size={12} sx={{display: {xs: "none", md: "block"}}}>
+                <AreaStatusContent
+                    points={points}
+                    pointPrefs={pointPrefs}
+                    selectedPref={selectedPref}
+                    setSelectedPref={setSelectedPref}
+                />
             </Grid>
 
-            {/* 市区町村別 */}
-            <Grid size={12}>
-                <DarkCard>
-                    <CardContent>
-                        <Stack spacing={2}>
-                            <Box sx={{
-                                borderBottom: '4px solid ' + (selectedPref ? getScaleColor(selectedPref.scale) : '#757575'),
-                                pb: 0.5,
-                                alignItems: 'center',
-                                display: 'flex',
-                                gap: 1
-                            }}>
-                                <Apartment />
-                                <Typography component="p">市区町村</Typography>
-                                <span>｜</span>
-                                <Typography component="span">
-                                    {selectedPref ? `${selectedPref.pref}内` : 'エリア不明'}
-                                    ：
-                                    {selectedPref ? formatScale(selectedPref.scale) : '情報なし'}
-                                </Typography>
-                            </Box>
-                            <Box sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                flexWrap: 'wrap',
-                                gap: 1,
-                                maxHeight: 150,
-                                overflowY: 'auto',
-                                scrollbarWidth: 'none'
-                            }}>
-                                {!selectedPref && (
-                                    <Box sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 1
-                                    }}>
-                                        <Warning />
-                                        <Typography component="span">不明です</Typography>
-                                    </Box>
-                                )}
-                                {selectedPref && points.map((point, index) => point.pref === selectedPref.pref && (
-                                        <Button
-                                            key={index}
-                                            variant="outlined"
-                                            onClick={() =>
-                                                setSheltersDialogStatus({
-                                                    open: true,
-                                                    prefectureName: selectedPref.pref,
-                                                    localName: point.addr
-                                                })
-                                            }
-                                        >
-                                            {point.addr}
-                                        </Button>
-                                    )
-                                )}
-                            </Box>
-                        </Stack>
-                    </CardContent>
-                </DarkCard>
-            </Grid>
-
-            <SheltersMapDialog
-                status={sheltersDialogStatus}
-                onReset={() =>
-                    setSheltersDialogStatus({
-                        open: false,
-                        prefectureName: '',
-                        localName: ''
-                    })
-                }
-            />
         </Grid>
     )
 }

@@ -42,7 +42,7 @@ const Top: FC = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={2} sx={{px: 2}}>
+                <Grid container spacing={2} sx={{px: 2, display: {xs: "none", md: "flex"}}}>
                     <Grid size={{xs: 12, lg: 6}}>
                         <HistoriesContent
                             p2pHistories={p2pHistories}

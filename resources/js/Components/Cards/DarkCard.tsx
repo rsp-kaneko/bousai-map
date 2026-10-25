@@ -7,6 +7,8 @@ type Props = {
     height?: number | string
     bgcolor?: string
     textColor?: string
+    mt?: number
+    mb?: number
 }
 
 const DarkCard: FC<Props> = (props) => {
@@ -16,6 +18,8 @@ const DarkCard: FC<Props> = (props) => {
         height = undefined,
         bgcolor = '#2e2e2e',
         textColor = '#fff',
+        mt = 0,
+        mb = 0
     } = props
 
     return (
@@ -24,7 +28,9 @@ const DarkCard: FC<Props> = (props) => {
             color: textColor,
             position: 'relative',
             width,
-            height
+            height,
+            mt,
+            mb
         }}>
             {children}
         </Card>

@@ -86,7 +86,7 @@ const PrefecturesMap: FC<Props> = ({
                 tsunamiHistories={tsunamiHistories}
             />
 
-            <RootMapContainer zoom={7} height={700} center={mapCenterPosition}>
+            <RootMapContainer zoom={7} height={{xs: "65vh", md: 700}} center={mapCenterPosition}>
 
                 {/* 震源地ポイントレイヤー */}
                 {hypocenter && hypocenter.latitude != null && hypocenter.longitude != null && (

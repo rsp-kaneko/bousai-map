@@ -14,7 +14,7 @@ const TsunamiStatusContent: FC<Props> = ({tsunamiHistories}) => {
 
     return (
         <DarkCard>
-            <CardContent>
+            <CardContent sx={{height: "64vh"}}>
                 <Stack spacing={2}>
                     <Typography component='h5' sx={{
                         borderBottom: '1px solid #aaa',
@@ -28,11 +28,23 @@ const TsunamiStatusContent: FC<Props> = ({tsunamiHistories}) => {
                     {!tsunamiHistories && (
                         <Box sx={{
                             display: 'flex',
+                            justifyContent: "center",
                             alignItems: 'center',
-                            gap: 1
+                            position: "relative",
+                            height: "40vh"
                         }}>
-                            <Warning />
-                            <Typography component="span">津波に関する情報はありません</Typography>
+                            <Box sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                gap: 1,
+                                position: "absolute",
+                                top: "50%"
+                            }}>
+                                <Warning sx={{fontSize: "5rem"}} />
+                                <Typography component="span">津波に関する情報はありません</Typography>
+                            </Box>
                         </Box>
                     )}
 
@@ -75,8 +87,6 @@ const TsunamiStatusContent: FC<Props> = ({tsunamiHistories}) => {
                                                 )}
                                             </Typography>
                                         </Box>
-
-
                                     </Stack>
                                 </CardContent>
                             </Card>

@@ -5,10 +5,10 @@ const RootFooter: FC = () => {
     return (
         <footer>
             <Box sx={{
-                display: 'flex',
+                display: "flex",
                 justifyContent: 'center',
                 alignItems: 'center',
-                py: 8
+                py: {xs: 1, md: 8}
             }}>
                 &copy; supported by kaneko
             </Box>
