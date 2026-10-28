@@ -1,5 +1,5 @@
 import { JmaObservationPoint, JmaQuake, JmaScale } from "@/types/p2pquake"
-import { alpha, CardContent, Grid, Stack, Typography } from "@mui/material"
+import { alpha, Box, CardContent, Grid, Stack, Typography } from "@mui/material"
 import { FC, ReactNode, useEffect, useMemo, useState } from "react"
 import DarkCard from "./Cards/DarkCard"
 import CurrentClock from "./CurrentClock"
@@ -10,12 +10,14 @@ import AreaStatusContent from "./AreaStatusContent"
 
 type Props = {
     selectedHistory: JmaQuake | null
+    renderWsStatusBadge: () => JSX.Element
 }
 
 const BousaiStatusContent: FC<Props> = ({
-    selectedHistory
+    selectedHistory,
+    renderWsStatusBadge
 }) => {
-    const {formatScale, getScaleColor, formatTsunami, getTsunamiColor} = useBousai()
+    const {formatScale, getScaleColor, formatTsunami} = useBousai()
     const [selectedPref, setSelectedPref] = useState<{pref: string, scale: JmaScale} | null>(null)
     const actionDateTime: string | undefined = selectedHistory?.earthquake?.time
     const maxScale = selectedHistory?.earthquake?.maxScale
@@ -115,6 +117,9 @@ const BousaiStatusContent: FC<Props> = ({
                             }}>
                                 <AccessTime sx={{mr: 1}} />
                                 発生日時
+                                <Box sx={{ ml: "auto", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                                    {renderWsStatusBadge()}
+                                </Box>
                             </Typography>
                             <CurrentClock actionDateTime={actionDateTime} />
                         </Stack>
