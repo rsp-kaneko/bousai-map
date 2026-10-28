@@ -9,6 +9,7 @@ type Props = {
     subTitle?: string | ReactNode
     icon: ReactNode
     color?: string
+    maxWidth?: "xs" | "sm" | "md" | "lg" | "xl"
     children: ReactNode
 }
 
@@ -19,11 +20,12 @@ const CustomDialog: FC<Props> = ({
     subTitle = undefined,
     icon,
     color = undefined,
+    maxWidth = "md",
     children
 }) => {
 
     return (
-        <Dialog open={open} fullWidth>
+        <Dialog open={open} maxWidth={maxWidth} fullWidth>
             <DialogTitle sx={{
                 display: "flex",
                 justifyContent: "space-between",

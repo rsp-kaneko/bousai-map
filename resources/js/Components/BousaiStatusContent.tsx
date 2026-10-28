@@ -1,12 +1,10 @@
 import { JmaObservationPoint, JmaQuake, JmaScale } from "@/types/p2pquake"
-import { CardContent, Grid, Stack, Typography } from "@mui/material"
-import { FC, useEffect, useMemo, useState } from "react"
+import { alpha, CardContent, Grid, Stack, Typography } from "@mui/material"
+import { FC, ReactNode, useEffect, useMemo, useState } from "react"
 import DarkCard from "./Cards/DarkCard"
 import CurrentClock from "./CurrentClock"
 import useBousai from "@/Hooks/useBousai"
-import { AccessTime, Equalizer } from "@mui/icons-material"
-import OutlinedCard from "./Cards/OutlinedCard"
-import CustomAlert from "./Alerts/CustomAlert"
+import { AccessTime, Equalizer, Help, Info, NewReleases, Warning } from "@mui/icons-material"
 import HypocenterMobileContent from "./HypocenterMobileContent"
 import AreaStatusContent from "./AreaStatusContent"
 
@@ -23,7 +21,7 @@ const BousaiStatusContent: FC<Props> = ({
     const maxScale = selectedHistory?.earthquake?.maxScale
     const scaleColor = maxScale !== undefined ? getScaleColor(maxScale) : '#757575'
     const scaleValue = maxScale !== undefined ? formatScale(maxScale) : '情報なし'
-    const tsunamiColor = getTsunamiColor(selectedHistory?.earthquake?.domesticTsunami)
+    const tsunamiGrade: string | undefined = selectedHistory?.earthquake?.domesticTsunami
     const tsunamiValue = formatTsunami(selectedHistory?.earthquake?.domesticTsunami)
     const points: JmaObservationPoint[] = selectedHistory?.points ?? []
     const pointPrefs: Array<{pref: string, scale: JmaScale}> = useMemo(() => {
@@ -34,6 +32,17 @@ const BousaiStatusContent: FC<Props> = ({
         })
         return prefs
     }, [points])
+    const tsunamiGradeIcon: ReactNode = useMemo(() => {
+        switch(tsunamiGrade) {
+            case 'None': return <Info />
+            case 'NonEffective': return <Info />
+            case 'Checking': return <Warning />
+            case 'Watch': return <Warning color="secondary" />
+            case 'Warning': return <NewReleases color="secondary" />
+            case 'Unknown': return <Help />
+            default: return <Help />
+        }
+    }, [tsunamiGrade])
 
     useEffect(() => {
         if (pointPrefs.length > 0) {
@@ -56,7 +65,7 @@ const BousaiStatusContent: FC<Props> = ({
 
             {/* 震度＆津波情報 */}
             <Grid size={{xs: 12, xl: 6}} sx={{display: {xs: "none", md: "block"}}}>
-                <OutlinedCard height="100%" bgcolor={scaleColor} textColor="#fff">
+                <DarkCard height="100%" bgcolor={scaleColor} textColor="#fff">
                     <CardContent>
                         <Typography
                             component='h1'
@@ -67,15 +76,30 @@ const BousaiStatusContent: FC<Props> = ({
                                 alignItems: 'center'
                             }}
                         >
-                            <Equalizer sx={{color: scaleColor, fontSize: '2.5rem', mr: 1}} />
+                            <Equalizer sx={{fontSize: '2.5rem', mr: 1}} />
                             最大{scaleValue}
                         </Typography>
-                        <CustomAlert
-                            color={tsunamiColor}
-                            message={tsunamiValue}
-                        />
+                        <Typography variant="caption" sx={{fontSize: "1.2rem"}}>
+                            【震源地】{selectedHistory?.earthquake?.hypocenter?.name}
+                        </Typography>
+                        <DarkCard mt={1} bgcolor={alpha("#fff", 0.2)}>
+                            <CardContent sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1
+                            }}>
+                                <Typography component="span">{tsunamiGradeIcon}</Typography>
+                                <Typography component="span" sx={{
+                                    color: tsunamiGrade == "Watch" || tsunamiGrade == "Warning"
+                                        ? "#fc0"
+                                        : "#fff"
+                                }}>
+                                    {tsunamiValue}
+                                </Typography>
+                            </CardContent>
+                        </DarkCard>
                     </CardContent>
-                </OutlinedCard>
+                </DarkCard>
             </Grid>
 
             {/* 発生日時 */}
