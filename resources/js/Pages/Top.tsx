@@ -3,11 +3,12 @@ import BousaiStatusContent from "@/Components/BousaiStatusContent";
 import HistoriesContent from "@/Components/HistoriesContent";
 import PrefecturesMap from "@/Components/Maps/PrefecturesMap";
 import TsunamiStatusContent from "@/Components/TsunamiStatusContent";
+import { RootContext } from "@/Contexts/RootContext";
 import RootLayout from "@/Layouts/RootLayout";
 import { JmaQuake } from "@/types/p2pquake";
 import { Wifi, WifiOff } from "@mui/icons-material";
-import { Box, Chip, Grid, Stack, Tooltip } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { Button, Chip, Grid, Stack, Tooltip } from "@mui/material";
+import { FC, useContext, useEffect, useState } from "react";
 
 const Top: FC = () => {
     // 環境変数 VITE_USE_P2P_SANDBOX が 'true' の場合はテスト用サンドボックスを使用
@@ -17,6 +18,8 @@ const Top: FC = () => {
     });
 
     const [selectedHistory, setSelectedHistory] = useState<JmaQuake | null>(null);
+    const {SET_QUAKE_ALERT} = useContext(RootContext)
+    const handleTest = () => SET_QUAKE_ALERT({open: true, eew: selectedHistory})
 
     useEffect(() => {
         getP2pHistories(30);
@@ -37,7 +40,7 @@ const Top: FC = () => {
                 <Tooltip title={useSandbox ? "P2P地震情報 サンドボックス環境に接続中（約30秒ごとにテストデータ配信）" : "P2P地震情報 WebSocket APIに接続中（リアルタイム受信）"}>
                     <Chip
                         icon={<Wifi fontSize="small" sx={{ "&&": { color: "#4caf50" } }} />}
-                        label={useSandbox ? "リアルタイム受信中 [Sandbox]" : "リアルタイム受信中 (Live)"}
+                        label={useSandbox ? "リアルタイム受信中 [テストモード]" : "リアルタイム受信中 (Live)"}
                         size="small"
                         sx={{
                             backgroundColor: "rgba(76, 175, 80, 0.15)",
@@ -111,6 +114,7 @@ const Top: FC = () => {
                 </Grid>
                 <Grid container spacing={2} sx={{px: 2, display: {xs: "none", md: "flex"}}}>
                     <Grid size={{xs: 12, lg: 6}}>
+                        <Button onClick={handleTest}>test</Button>
                         <HistoriesContent
                             p2pHistories={p2pHistories}
                             selectedHistory={selectedHistory}

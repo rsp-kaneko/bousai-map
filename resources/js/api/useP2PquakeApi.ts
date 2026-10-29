@@ -1,5 +1,5 @@
 import { useRootContext } from "@/Contexts/RootContext"
-import { JmaQuake, JmaTsunami, P2pHistoryItem } from "@/types/p2pquake"
+import { EEW, JmaQuake, JmaTsunami, P2pHistoryItem } from "@/types/p2pquake"
 import axios from "axios"
 import { useCallback, useEffect, useRef, useState } from "react"
 
@@ -17,12 +17,14 @@ const useP2PquakeApi = (options: UseP2PquakeApiOptions = {}) => {
         ? "wss://api-realtime-sandbox.p2pquake.net/v2/ws"
         : "wss://api.p2pquake.net/v2/ws";
 
-    const { SET_ALERT } = useRootContext()
+    const { SET_ALERT, SET_QUAKE_ALERT } = useRootContext()
     const [p2pHistories, setP2pHistories] = useState<JmaQuake[]>([])
     const [tsunamiHistories, setTsunamiHistories] = useState<JmaTsunami | null>(null)
+    const [eew, setEew] = useState<EEW | null>(null)
     const [wsStatus, setWsStatus] = useState<WebSocketStatus>('CLOSED')
 
     const wsRef = useRef<WebSocket | null>(null)
+    const eewRef = useRef<EEW | null>(null)
     const reconnectTimerRef = useRef<NodeJS.Timeout | null>(null)
     const isUnmountingRef = useRef<boolean>(false)
 
@@ -103,10 +105,37 @@ const useP2PquakeApi = (options: UseP2PquakeApiOptions = {}) => {
                         : '【津波予報発表】最新の津波情報を受信しました'
                 })
             }
+
+            // 556: 緊急地震速報（警報）
+            if (data.code === 556) {
+                const newEew = data as EEW
+                // 本番環境ではテスト配信を無視
+                if (newEew.test && !useSandbox) return
+
+                // 同一イベントの重複・古い報は無視（同じ情報が複数回配信されることがある）
+                const current = eewRef.current
+                if (current && current.issue.eventId === newEew.issue.eventId) {
+                    if (current.id === newEew.id) return
+                    if (Number(newEew.issue.serial) < Number(current.issue.serial)) return
+                }
+
+                eewRef.current = newEew
+                setEew(newEew)
+
+                if (newEew.cancelled) {
+                    SET_ALERT({
+                        open: true,
+                        status: 'info',
+                        message: '緊急地震速報（警報）は取り消されました'
+                    })
+                } else {
+                    // SET_QUAKE_ALERT({open: true, eew: newEew})
+                }
+            }
         } catch (err) {
             console.error("P2Pquake WebSocket message parse error:", err)
         }
-    }, [SET_ALERT])
+    }, [SET_ALERT, useSandbox])
 
     // WebSocket切断処理
     const disconnectWs = useCallback(() => {
@@ -186,6 +215,7 @@ const useP2PquakeApi = (options: UseP2PquakeApiOptions = {}) => {
     return {
         p2pHistories,
         tsunamiHistories,
+        eew,
         getP2pHistories,
         getTsunamiHistories,
         wsStatus,
