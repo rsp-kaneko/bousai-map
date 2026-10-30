@@ -7,7 +7,7 @@ const QuakeAlertSystem: FC = () => {
     const {QUAKE_ALERT, SET_QUAKE_ALERT} = useContext(RootContext)
     const onClose = () => SET_QUAKE_ALERT((prev) => ({...prev, open: false}))
     const place = QUAKE_ALERT.eew?.earthquake?.hypocenter?.name || "震源地不明"
-    const prefs = Array.from(new Set(QUAKE_ALERT.eew?.points?.map((area) => area.pref) ?? []))
+    const prefs = Array.from(new Set(QUAKE_ALERT.eew?.areas?.map((area) => area.pref) ?? []))
     const cancelFlg = QUAKE_ALERT.cancelFlg
 
     return (
@@ -23,7 +23,7 @@ const QuakeAlertSystem: FC = () => {
             }}
         >
             <DialogTitle sx={{
-                backgroundColor: cancelFlg ? "#aaa" : "#f50",
+                backgroundColor: cancelFlg ? "#555" : "#f30",
                 color: "#fff",
                 display: "flex",
                 alignItems: "center",
@@ -36,7 +36,8 @@ const QuakeAlertSystem: FC = () => {
                 }}>
                     {cancelFlg ? (
                         <>
-
+                            <Typography component="h5" sx={{fontSize: "1.5rem", fontWeight: "bold"}}>警報は解除されました</Typography>
+                            <Typography variant="caption" sx={{fontSize: "1.1rem"}}>緊急地震速報は取り消されました</Typography>
                         </>
                     ) : (
                         <>
@@ -48,7 +49,7 @@ const QuakeAlertSystem: FC = () => {
             </DialogTitle>
             <Divider />
             <DialogContent sx={{
-                backgroundColor: cancelFlg ? "#aaa" : "#f50",
+                backgroundColor: cancelFlg ? "#555" : "#f30",
                 color: "#fff"
             }}>
                 <Box sx={{
@@ -61,7 +62,11 @@ const QuakeAlertSystem: FC = () => {
                         display: "flex"
                     }}>
                         <Place />
-                        【震源地】{place}
+                        {cancelFlg ? (
+                            <>以下の警報は解除されました</>
+                        ) : (
+                            <>【震源地】{place}</>
+                        )}
                     </Typography>
                     <Divider sx={{borderColor: "#ddd", my: 1}} />
                     <Box sx={{
@@ -72,7 +77,7 @@ const QuakeAlertSystem: FC = () => {
                         {prefs.map((pref, index) => (
                             <Button
                                 variant="contained"
-                                color="secondary"
+                                color={cancelFlg ? "primary" : "secondary"}
                                 sx={{pointerEvents: "none"}}
                                 key={pref+index}
                             >
@@ -91,7 +96,7 @@ const QuakeAlertSystem: FC = () => {
                 justifyContent: "center",
                 cursor: "pointer"
             }}>
-                確認
+                確認（閉じる）
             </DialogActions>
         </Dialog>
     )

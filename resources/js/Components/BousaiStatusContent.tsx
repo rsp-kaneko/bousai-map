@@ -66,7 +66,7 @@ const BousaiStatusContent: FC<Props> = ({
             </Grid>
 
             {/* 震度＆津波情報 */}
-            <Grid size={{xs: 12, xl: 6}} sx={{display: {xs: "none", md: "block"}}}>
+            <Grid size={{xs: 12, xl: 7}} sx={{display: {xs: "none", md: "block"}}}>
                 <DarkCard height="100%" bgcolor={scaleColor} textColor="#fff">
                     <CardContent>
                         <Typography
@@ -105,7 +105,7 @@ const BousaiStatusContent: FC<Props> = ({
             </Grid>
 
             {/* 発生日時 */}
-            <Grid size={{xs: 12, xl: 6}}>
+            <Grid size={{xs: 12, xl: 5}}>
                 <DarkCard height="100%">
                     <CardContent>
                         <Stack spacing={2}>
@@ -117,11 +117,11 @@ const BousaiStatusContent: FC<Props> = ({
                             }}>
                                 <AccessTime sx={{mr: 1}} />
                                 発生日時
-                                <Box sx={{ ml: "auto", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                                    {renderWsStatusBadge()}
-                                </Box>
                             </Typography>
                             <CurrentClock actionDateTime={actionDateTime} />
+                            <Box sx={{ ml: "auto", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                                {renderWsStatusBadge()}
+                            </Box>
                         </Stack>
                     </CardContent>
                 </DarkCard>

@@ -25,8 +25,8 @@ const CurrentClock: FC<Props> = ({actionDateTime}) => {
 
     return (
         <Box>
-            <Typography component='h1' sx={{fontSize: {xs: '1.3rem', md: '1.6rem'}, color: '#adf'}}>{currentDate}</Typography>
-            <Typography component='h1' sx={{fontSize: {xs: '1rem', md: '1.3rem'}}}>{currentTime}</Typography>
+            <Typography component='h1' sx={{fontSize: {xs: '1.3rem', md: '1.4rem'}, color: '#adf'}}>{currentDate}</Typography>
+            <Typography component='h1' sx={{fontSize: {xs: '1rem', md: '1.1rem'}}}>{currentTime}</Typography>
         </Box>
     )
 }

@@ -1,8 +1,9 @@
 import { FC, ReactNode, useState } from "react";
-import { AlertProps, QuakeAlertProps, RootContext } from "./RootContext";
+import { AlertProps, QuakeAlertProps, RootContext, TsunamiAlertProps } from "./RootContext";
 import LoadingSystem from "@/Components/Systems/LoadingSystem";
 import AlertSystem from "@/Components/Systems/AlertSystem";
 import QuakeAlertSystem from "@/Components/Systems/QuakeAlertSystem";
+import TsunamiAlertSystem from "@/Components/Systems/TsunamiAlertSystem";
 
 type Props = {
     children: ReactNode
@@ -15,6 +16,7 @@ const RootProvider: FC<Props> = (props) => {
     const [IS_LOAD, SET_IS_LOAD] = useState(false)
     const [ALERT, SET_ALERT] = useState<AlertProps>({open: false, status: 'info', message: '---'})
     const [QUAKE_ALERT, SET_QUAKE_ALERT] = useState<QuakeAlertProps>({open: false, eew: null, cancelFlg: false})
+    const [TSUNAMI_ALERT, SET_TSUNAMI_ALERT] = useState<TsunamiAlertProps>({open: false, tsunami: null, cancelFlg: false})
 
     window.addEventListener('beforeunload', () => SET_IS_LOAD(true))
 
@@ -26,7 +28,9 @@ const RootProvider: FC<Props> = (props) => {
         ALERT,
         SET_ALERT,
         QUAKE_ALERT,
-        SET_QUAKE_ALERT
+        SET_QUAKE_ALERT,
+        TSUNAMI_ALERT,
+        SET_TSUNAMI_ALERT
     }
 
     return (
@@ -35,6 +39,7 @@ const RootProvider: FC<Props> = (props) => {
 
             <AlertSystem />
             <QuakeAlertSystem />
+            <TsunamiAlertSystem />
 
             {IS_LOAD && (
                 <LoadingSystem />

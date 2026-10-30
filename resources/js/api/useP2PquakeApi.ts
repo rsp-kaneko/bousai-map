@@ -17,7 +17,7 @@ const useP2PquakeApi = (options: UseP2PquakeApiOptions = {}) => {
         ? "wss://api-realtime-sandbox.p2pquake.net/v2/ws"
         : "wss://api.p2pquake.net/v2/ws";
 
-    const { SET_ALERT, SET_QUAKE_ALERT } = useRootContext()
+    const { SET_ALERT, SET_QUAKE_ALERT, SET_TSUNAMI_ALERT } = useRootContext()
     const [p2pHistories, setP2pHistories] = useState<JmaQuake[]>([])
     const [tsunamiHistories, setTsunamiHistories] = useState<JmaTsunami | null>(null)
     const [eew, setEew] = useState<EEW | null>(null)
@@ -67,8 +67,10 @@ const useP2PquakeApi = (options: UseP2PquakeApiOptions = {}) => {
     // WebSocketメッセージ受信ハンドラ
     const handleWebSocketMessage = useCallback((event: MessageEvent) => {
         try {
-            const data: P2pHistoryItem = JSON.parse(event.data)
-            if (!data || !data.code) return
+            const raw = JSON.parse(event.data)
+            if (!raw || !raw.code) return
+            // WebSocket APIはIDを"_id"で配信するため、REST APIと同じ"id"に揃える
+            const data: P2pHistoryItem = { ...raw, id: raw.id ?? raw._id }
 
             // 551: 地震情報
             if (data.code === 551) {
@@ -97,13 +99,7 @@ const useP2PquakeApi = (options: UseP2PquakeApiOptions = {}) => {
             if (data.code === 552) {
                 const tsunami = data as JmaTsunami
                 setTsunamiHistories(tsunami)
-                SET_ALERT({
-                    open: true,
-                    status: tsunami.cancelled ? 'info' : 'warning',
-                    message: tsunami.cancelled
-                        ? '津波予報が解除されました'
-                        : '【津波予報発表】最新の津波情報を受信しました'
-                })
+                SET_TSUNAMI_ALERT({open: true, tsunami: tsunami, cancelFlg: tsunami.cancelled})
             }
 
             // 556: 緊急地震速報（警報）
@@ -121,16 +117,7 @@ const useP2PquakeApi = (options: UseP2PquakeApiOptions = {}) => {
 
                 eewRef.current = newEew
                 setEew(newEew)
-
-                if (newEew.cancelled) {
-                    SET_ALERT({
-                        open: true,
-                        status: 'info',
-                        message: '緊急地震速報（警報）は取り消されました'
-                    })
-                } else {
-                    // SET_QUAKE_ALERT({open: true, eew: newEew})
-                }
+                SET_QUAKE_ALERT({open: true, eew: newEew, cancelFlg: newEew.cancelled})
             }
         } catch (err) {
             console.error("P2Pquake WebSocket message parse error:", err)
